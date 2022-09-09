@@ -8,11 +8,12 @@ form.addEventListener('submit', onFormSubmit);
 form.addEventListener('input', throttle(onMessageInput, 500));
 
 const STORAGE_KEY = 'feedback-form-state';
+const formData = {};
 
 populateMessage();
 
 // 1
-const formData = {};
+
 function onMessageInput(e) {
   //   console.log(e.target.value);
   formData[e.target.name] = e.target.value;
@@ -22,11 +23,24 @@ function onMessageInput(e) {
 // 2
 
 function populateMessage() {
-  const savedMessage = localStorage.getItem(STORAGE_KEY);
-  const parseMessage = JSON.parse(savedMessage);
+  let savedMessage = localStorage.getItem(STORAGE_KEY);
+  // console.log(savedMessage);
+  // 1 вытащил строку
   if (savedMessage) {
-    textarea.value = parseMessage.message;
-    input.value = parseMessage.email;
+    const parseMessage = JSON.parse(savedMessage);
+    // console.log(parseMessage);
+    //2 распарсил( сделал объект)
+    Object.entries(parseMessage).forEach(([name, value]) => {
+      //4 достал значение ключа (key) и поменять на вхождение (entries )
+      console.log(name, value);
+      // 5 деструкторизация значений
+      formData[name] = value;
+      form.elements[name].value = value;
+      // console.log(form.elements[name].value);
+      // присвоил значения
+    });
+    // console.log(Object.keys(parseMessage));
+    //3 достал значения из объекта
   }
 }
 
